@@ -59,6 +59,8 @@ DATABASE_ENGINE=sqlite3
 DATABASE_DSN=./todayorneverd.db
 ```
 
+Of course, all these values are overridable when launching the program.
+
 ### Compiling the binary
 
 ```sh
@@ -68,7 +70,7 @@ make
 ## Running the program
 
 ```sh
-./todayornever-api
+env $(cat .env | xargs) ./todayornever-api
 ```
 
 ---
