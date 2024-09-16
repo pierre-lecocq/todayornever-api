@@ -1,0 +1,5 @@
+todayornever-api
+.env*
+*.http
+*.db
+coverage.out

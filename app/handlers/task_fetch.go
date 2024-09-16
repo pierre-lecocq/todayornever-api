@@ -1,0 +1,50 @@
+// File: task_fetch.go
+// Creation: Thu Sep  5 15:33:16 2024
+// Time-stamp: <2024-09-16 18:59:37>
+// Copyright (C): 2024 Pierre Lecocq
+
+package handlers
+
+import (
+	"database/sql"
+	"net/http"
+	"strconv"
+
+	"github.com/pierre-lecocq/todayornever-api/app/models"
+	"github.com/pierre-lecocq/todayornever-api/pkg/response"
+
+	"github.com/gorilla/mux"
+	"github.com/rs/zerolog/log"
+)
+
+func TaskFetchHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		userID := r.Context().Value("UserID").(int64)
+
+		if userID == 0 {
+			response.SendJSONError(w, http.StatusBadRequest, "Invalid UserID value in context")
+			return
+		}
+
+		params := mux.Vars(r)
+		id, err := strconv.Atoi(params["id"])
+
+		if err != nil {
+			log.Debug().Err(err)
+			response.SendJSONError(w, http.StatusBadRequest, "Invalid ID parameter in URL")
+			return
+		}
+
+		task, err := models.FetchTask(db, userID, int64(id))
+
+		if err != nil {
+			log.Debug().Err(err)
+			response.SendJSONError(w, http.StatusNotFound, err.Error())
+			return
+		}
+
+		log.Debug().Msgf("Task %d fetched", id)
+
+		response.SendJSON(w, http.StatusOK, task)
+	}
+}
