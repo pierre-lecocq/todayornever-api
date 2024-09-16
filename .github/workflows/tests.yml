@@ -20,5 +20,17 @@ jobs:
       with:
         go-version: '1.22'
 
+    - name: Create env file
+      run: |
+        touch .env
+        echo SERVICE_HOST=localhost >> .env
+        echo SERVICE_PORT=8080 >> .env
+        echo LOGGER_LEVEL=0 >> .env
+        echo AUTH_ISSUER=todayornever-api >> .env
+        echo AUTH_SECRET=ThatSuperSecretKey >> .env
+        echo AUTH_EXPIRES=1 >> .env
+        echo DATABASE_ENGINE=sqlite3 >> .env
+        echo DATABASE_DSN=memory >> .env
+
     - name: Test
       run: make test
