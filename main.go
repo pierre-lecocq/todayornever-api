@@ -1,6 +1,6 @@
 // File: main.go
 // Creation: Thu Sep  5 08:17:00 2024
-// Time-stamp: <2024-09-16 19:02:13>
+// Time-stamp: <2024-09-17 18:20:23>
 // Copyright (C): 2024 Pierre Lecocq
 
 package main
@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strconv"
 	"time"
 
 	hd "github.com/pierre-lecocq/todayornever-api/app/handlers"
@@ -20,53 +19,49 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+	"github.com/spf13/viper"
 )
 
-func validateConfig() error {
-	keys := []string{
-		"SERVICE_HOST",
-		"SERVICE_PORT",
-		"AUTH_ISSUER",
-		"AUTH_SECRET",
-		"AUTH_EXPIRES",
-		"DATABASE_ENGINE",
-		"DATABASE_DSN",
+func initConfig() error {
+	viper.SetConfigFile(".env")
+
+	err := viper.ReadInConfig()
+
+	if err != nil {
+		return err
 	}
 
-	for k := range keys {
-		_, ok := os.LookupEnv(keys[k])
+	viper.SetDefault("SERVICE_HOST", "localhost")
+	viper.SetDefault("SERVICE_PORT", 8080)
 
-		if !ok {
-			return fmt.Errorf("Missing environment variable %s", keys[k])
-		}
-	}
+	viper.SetDefault("LOGGER_LEVEL", 3)
+
+	viper.SetDefault("AUTH_ISSUER", "todayornever-api")
+	viper.SetDefault("AUTH_EXPIRES", 1)
+
+	viper.SetDefault("DATABASE_ENGINE", "sqlite3")
+	viper.SetDefault("DATABASE_DSN", ":memory:")
 
 	return nil
 }
 
 func initDatabase() (*sql.DB, error) {
 	return database.Connect(&database.Config{
-		Engine: os.Getenv("DATABASE_ENGINE"),
-		DSN:    os.Getenv("DATABASE_DSN"),
+		Engine: viper.GetString("DATABASE_ENGINE"),
+		DSN:    viper.GetString("DATABASE_DSN"),
 	})
 }
 
 func initLogger() {
-	lvl, err := strconv.Atoi(os.Getenv("LOGGER_LEVEL"))
-
-	if err != nil {
-		lvl = 3
-	}
-
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
-	zerolog.SetGlobalLevel(zerolog.Level(lvl))
+	zerolog.SetGlobalLevel(zerolog.Level(viper.GetInt("LOGGER_LEVEL")))
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 }
 
 func main() {
 	// Init
 
-	err := validateConfig()
+	err := initConfig()
 
 	if err != nil {
 		panic(err)
@@ -102,13 +97,13 @@ func main() {
 	// Start
 
 	srv := &http.Server{
-		Addr:         fmt.Sprintf("%s:%s", os.Getenv("SERVICE_HOST"), os.Getenv("SERVICE_PORT")),
+		Addr:         fmt.Sprintf("%s:%d", viper.Get("SERVICE_HOST"), viper.GetInt("SERVICE_PORT")),
 		WriteTimeout: time.Second * 15,
 		ReadTimeout:  time.Second * 15,
 		IdleTimeout:  time.Second * 60,
 		Handler:      r,
 	}
 
-	log.Info().Msgf("Starting service on port %s...", os.Getenv("SERVICE_PORT"))
+	log.Info().Msgf("Starting service on port %d...", viper.GetInt("SERVICE_PORT"))
 	log.Panic().Err(srv.ListenAndServe())
 }

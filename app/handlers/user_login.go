@@ -1,6 +1,6 @@
 // File: user_login.go
 // Creation: Thu Sep  5 15:33:47 2024
-// Time-stamp: <2024-09-16 19:00:04>
+// Time-stamp: <2024-09-17 18:18:38>
 // Copyright (C): 2024 Pierre Lecocq
 
 package handlers
@@ -10,8 +10,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
-	"strconv"
 
 	"github.com/pierre-lecocq/todayornever-api/app/models"
 	"github.com/pierre-lecocq/todayornever-api/app/validators"
@@ -19,6 +17,7 @@ import (
 	"github.com/pierre-lecocq/todayornever-api/pkg/response"
 
 	"github.com/rs/zerolog/log"
+	"github.com/spf13/viper"
 )
 
 func UserLoginHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
@@ -49,17 +48,11 @@ func UserLoginHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		expires, err := strconv.Atoi(os.Getenv("AUTH_EXPIRES"))
-
-		if err != nil {
-			expires = 1
-		}
-
 		token, err := auth.GenerateJWTToken(
 			user.ID,
-			os.Getenv("AUTH_ISSUER"),
-			os.Getenv("AUTH_SECRET"),
-			expires,
+			viper.GetString("AUTH_ISSUER"),
+			viper.GetString("AUTH_SECRET"),
+			viper.GetInt("AUTH_EXPIRES"),
 		)
 
 		if err != nil {

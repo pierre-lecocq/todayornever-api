@@ -1,6 +1,6 @@
 // File: auth.go
 // Creation: Thu Sep  5 09:43:49 2024
-// Time-stamp: <2024-09-16 19:00:45>
+// Time-stamp: <2024-09-17 17:52:43>
 // Copyright (C): 2024 Pierre Lecocq
 
 package middleware
@@ -8,11 +8,11 @@ package middleware
 import (
 	"context"
 	"net/http"
-	"os"
 	"strings"
 
 	"github.com/pierre-lecocq/todayornever-api/pkg/auth"
 	"github.com/pierre-lecocq/todayornever-api/pkg/response"
+	"github.com/spf13/viper"
 )
 
 func Auth(next http.Handler) http.Handler {
@@ -42,7 +42,7 @@ func Auth(next http.Handler) http.Handler {
 			return
 		}
 
-		claimedUserID, err := auth.ValidateAndDecodeJWTToken(chunks[1], os.Getenv("AUTH_SECRET"))
+		claimedUserID, err := auth.ValidateAndDecodeJWTToken(chunks[1], viper.GetString("AUTH_SECRET"))
 
 		if err != nil {
 			response.SendJSON(w, http.StatusUnauthorized, map[string]interface{}{

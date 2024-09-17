@@ -1,11 +1,8 @@
 BIN_NAME=todayornever-api
 
-include .env
-export
-
 .PHONY: build
 
-all: build
+all: build test coverage run start clean
 
 test:
 	go test ./...
@@ -17,6 +14,9 @@ coverage:
 build:
 	go build -o ./$(BIN_NAME) .
 
+build-linux:
+	GOOS=linux GOARCH=amd64 go build -o ./$(BIN_NAME)-linux-amd64 .
+
 run:
 	go run main.go
 
@@ -24,7 +24,7 @@ start:
 	./$(BIN_NAME) # env $(cat .env | xargs) ./$(BIN_NAME)
 
 clean:
-	rm -f ./$(BIN_NAME) coverage.out
+	rm -f ./$(BIN_NAME) ./$(BIN_NAME)-linux-amd64 coverage.out
 
 # Database migrations
 
