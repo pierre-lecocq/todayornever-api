@@ -4,7 +4,7 @@
 
 ```sh
 mkdir -p /home/todayornever/.ssh
-touch /home/todayornever/.ssh/authorized_keys
+cp ~/.ssh/authorized_keys /home/todayornever/.ssh/authorized_keys
 useradd -d /home/todayornever todayornever
 usermod -aG sudo todayornever
 chown -R todayornever:todayornever /home/todayornever/
@@ -29,7 +29,7 @@ ln -s /snap/bin/certbot /usr/bin/certbot
 
 1. Create the `.env` file
 2. Create the database file and run the migrations
-3. Compile the binary
+3. Compile the binary with `env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./prod/todayornever-api .`
 4. Put these 3 files into /home/todayornever/todayornever-api
 
 ## Set a systemd service
@@ -39,12 +39,17 @@ Create `/lib/systemd/system/todayornever-api.service` with:
 ```
 [Unit]
 Description=todayornever-api
+ConditionPathExists=/home/todayornever/todayornever-api/todayornever-api
+After=network.target
 
 [Service]
 Type=simple
 Restart=always
-RestartSec=5s
+RestartSec=5
 ExecStart=/home/todayornever/todayornever-api/todayornever-api
+WorkingDirectory=/home/todayornever/todayornever-api
+User=todayornever
+Group=todayornever
 
 [Install]
 WantedBy=multi-user.target
@@ -53,7 +58,16 @@ WantedBy=multi-user.target
 Start the service with:
 
 ```sh
-service todayornever-api start
+systemctl enable todayornever-api.service
+systemctl start todayornever-api
+systemctl status todayornever-api
+journalctl -f -u todayornever-api
+```
+
+If needed, restart the daemon with:
+
+```sh
+systemctl daemon-reload
 ```
 
 ## Create a nginx site
@@ -74,7 +88,7 @@ Create `/etc/nginx/sites-available/todayornever-api` with:
 
 ```
 server {
-    listen 80
+    listen 80;
     server_name todayornever-api.flyingstack.com;
 
     location / {

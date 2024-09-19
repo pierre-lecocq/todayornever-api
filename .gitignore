@@ -3,3 +3,4 @@ todayornever-api
 *.http
 *.db
 coverage.out
+prod/

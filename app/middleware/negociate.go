@@ -1,6 +1,6 @@
 // File: negociate.go
 // Creation: Thu Sep  5 09:27:52 2024
-// Time-stamp: <2024-09-16 19:00:51>
+// Time-stamp: <2024-09-19 11:32:09>
 // Copyright (C): 2024 Pierre Lecocq
 
 package middleware
@@ -22,14 +22,14 @@ func Negociate(next http.Handler) http.Handler {
 			return
 		}
 
-		a := r.Header.Get("Accept")
+		// a := r.Header.Get("Accept")
 
-		if a != "*/*" && a != "application/json" {
-			response.SendJSON(w, http.StatusBadRequest, map[string]interface{}{
-				"error": "Wrong Accept header value",
-			})
-			return
-		}
+		// if a != "*/*" && a != "application/json" {
+		// 	response.SendJSON(w, http.StatusBadRequest, map[string]interface{}{
+		// 		"error": "Wrong Accept header value",
+		// 	})
+		// 	return
+		// }
 
 		next.ServeHTTP(w, r)
 	})

@@ -14,9 +14,6 @@ coverage:
 build:
 	go build -o ./$(BIN_NAME) .
 
-build-linux:
-	GOOS=linux GOARCH=amd64 go build -o ./$(BIN_NAME)-linux-amd64 .
-
 run:
 	go run main.go
 
