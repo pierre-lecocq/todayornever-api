@@ -1,6 +1,6 @@
 // File: main.go
 // Creation: Thu Sep  5 08:17:00 2024
-// Time-stamp: <2024-09-20 11:34:10>
+// Time-stamp: <2024-09-20 11:59:35>
 // Copyright (C): 2024 Pierre Lecocq
 
 package main
@@ -110,6 +110,7 @@ func main() {
 	r.Use(mw.Negociate)
 
 	r.Handle("/", http.HandlerFunc(hd.IndexHandler())).Methods(http.MethodGet)
+	r.Handle("/health", http.HandlerFunc(hd.HealthHandler())).Methods(http.MethodGet)
 
 	r.Handle("/login", http.HandlerFunc(hd.UserLoginHandler(db))).Methods(http.MethodPost)
 	r.Handle("/signup", http.HandlerFunc(hd.UserSignupHandler(db))).Methods(http.MethodPost)

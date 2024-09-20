@@ -1,6 +1,6 @@
 // File: logrequest.go
 // Creation: Fri Sep  6 22:47:10 2024
-// Time-stamp: <2024-09-20 11:28:36>
+// Time-stamp: <2024-09-20 12:10:46>
 // Copyright (C): 2024 Pierre Lecocq
 
 package middleware
@@ -29,13 +29,15 @@ func LogRequest(next http.Handler) http.Handler {
 
 		next.ServeHTTP(&rws, r)
 
-		log.Info().Msgf("[%s] %s %s (%db) - %s %d",
-			r.RemoteAddr,
-			r.Method,
-			r.URL.Path,
-			r.ContentLength,
-			time.Since(rws.Start).String(),
-			rws.Status,
-		)
+		if r.URL.Path != "/health" {
+			log.Info().Msgf("[%s] %s %s (%db) - %s %d",
+				r.RemoteAddr,
+				r.Method,
+				r.URL.Path,
+				r.ContentLength,
+				time.Since(rws.Start).String(),
+				rws.Status,
+			)
+		}
 	})
 }
