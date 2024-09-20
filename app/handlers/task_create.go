@@ -1,6 +1,6 @@
 // File: task_create.go
 // Creation: Thu Sep  5 15:33:00 2024
-// Time-stamp: <2024-09-16 18:59:19>
+// Time-stamp: <2024-09-20 11:25:01>
 // Copyright (C): 2024 Pierre Lecocq
 
 package handlers
@@ -24,6 +24,7 @@ func TaskCreateHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) 
 		userID := r.Context().Value("UserID").(int64)
 
 		if userID == 0 {
+			log.Error().Msg("Invalid UserID value in context")
 			response.SendJSONError(w, http.StatusBadRequest, "Invalid UserID value in context")
 			return
 		}
@@ -31,7 +32,7 @@ func TaskCreateHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) 
 		err := json.NewDecoder(r.Body).Decode(&t)
 
 		if err != nil {
-			log.Debug().Err(err)
+			log.Error().Int("UserID", int(userID)).Err(err).Msg(err.Error())
 			response.SendJSONError(w, http.StatusBadRequest, "Can not decode JSON body")
 			return
 		}
@@ -39,7 +40,7 @@ func TaskCreateHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) 
 		err = validators.ValidateTaskForCreation(t)
 
 		if err != nil {
-			log.Debug().Err(err)
+			log.Error().Int("UserID", int(userID)).Err(err).Msg(err.Error())
 			response.SendJSONError(w, http.StatusBadRequest, err.Error())
 			return
 		}
@@ -47,12 +48,12 @@ func TaskCreateHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) 
 		task, err := models.CreateTask(db, userID, t)
 
 		if err != nil {
-			log.Debug().Msg("Can not create task")
+			log.Error().Int("UserID", int(userID)).Err(err).Msg(err.Error())
 			response.SendJSONError(w, http.StatusBadRequest, "Can not create task")
 			return
 		}
 
-		log.Debug().Msgf("Task %d created", task.ID)
+		log.Info().Int("UserID", int(userID)).Msgf("Task %d created", task.ID)
 
 		response.SendJSON(w, http.StatusCreated, task)
 	}

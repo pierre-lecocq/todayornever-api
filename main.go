@@ -1,6 +1,6 @@
 // File: main.go
 // Creation: Thu Sep  5 08:17:00 2024
-// Time-stamp: <2024-09-17 18:20:23>
+// Time-stamp: <2024-09-20 11:34:10>
 // Copyright (C): 2024 Pierre Lecocq
 
 package main
@@ -8,6 +8,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"time"
@@ -15,6 +16,7 @@ import (
 	hd "github.com/pierre-lecocq/todayornever-api/app/handlers"
 	mw "github.com/pierre-lecocq/todayornever-api/app/middleware"
 	"github.com/pierre-lecocq/todayornever-api/pkg/database"
+	"github.com/pierre-lecocq/todayornever-api/pkg/logging"
 
 	"github.com/gorilla/mux"
 	"github.com/rs/zerolog"
@@ -53,9 +55,33 @@ func initDatabase() (*sql.DB, error) {
 }
 
 func initLogger() {
+	writers := []io.Writer{
+		zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.RFC3339},
+	}
+
+	if len(viper.GetString("LOGGER_OPEN_OBSERVE_ORG")) > 0 {
+		writers = append(writers, &logging.OpenObserveWriter{
+			Org:      viper.GetString("LOGGER_OPEN_OBSERVE_ORG"),
+			Username: viper.GetString("LOGGER_OPEN_OBSERVE_USERNAME"),
+			Password: viper.GetString("LOGGER_OPEN_OBSERVE_PASSWORD"),
+			Stream:   "default",
+		})
+	}
+
+	writer := zerolog.MultiLevelWriter(writers...)
+
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 	zerolog.SetGlobalLevel(zerolog.Level(viper.GetInt("LOGGER_LEVEL")))
-	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+
+	zlog := zerolog.New(writer).
+		With().
+		Timestamp().
+		Str("app_environment", viper.GetString("APP_ENVIRONMENT")).
+		Str("app_name", viper.GetString("APP_NAME")).
+		Str("app_version", viper.GetString("APP_VERSION")).
+		Logger()
+
+	log.Logger = zlog
 }
 
 func main() {
@@ -104,6 +130,6 @@ func main() {
 		Handler:      r,
 	}
 
-	log.Info().Msgf("Starting service on port %d...", viper.GetInt("SERVICE_PORT"))
+	log.Debug().Msgf("Starting service on port %d...", viper.GetInt("SERVICE_PORT"))
 	log.Panic().Err(srv.ListenAndServe())
 }

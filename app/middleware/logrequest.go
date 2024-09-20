@@ -1,6 +1,6 @@
 // File: logrequest.go
 // Creation: Fri Sep  6 22:47:10 2024
-// Time-stamp: <2024-09-15 15:24:52>
+// Time-stamp: <2024-09-20 11:28:36>
 // Copyright (C): 2024 Pierre Lecocq
 
 package middleware

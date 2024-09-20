@@ -1,6 +1,6 @@
 // File: task_update.go
 // Creation: Thu Sep  5 15:33:26 2024
-// Time-stamp: <2024-09-16 18:59:52>
+// Time-stamp: <2024-09-20 11:25:56>
 // Copyright (C): 2024 Pierre Lecocq
 
 package handlers
@@ -26,6 +26,7 @@ func TaskUpdateHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) 
 		userID := r.Context().Value("UserID").(int64)
 
 		if userID == 0 {
+			log.Error().Msg("Invalid UserID value in context")
 			response.SendJSONError(w, http.StatusBadRequest, "Invalid UserID value in context")
 			return
 		}
@@ -33,7 +34,7 @@ func TaskUpdateHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) 
 		err := json.NewDecoder(r.Body).Decode(&t)
 
 		if err != nil {
-			log.Debug().Err(err)
+			log.Error().Int("UserID", int(userID)).Err(err).Msg(err.Error())
 			response.SendJSONError(w, http.StatusBadRequest, "Can not decode JSON body")
 			return
 		}
@@ -42,7 +43,7 @@ func TaskUpdateHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) 
 		id, err := strconv.Atoi(params["id"])
 
 		if err != nil {
-			log.Debug().Err(err)
+			log.Error().Int("UserID", int(userID)).Err(err).Msg(err.Error())
 			response.SendJSONError(w, http.StatusBadRequest, "Invalid ID parameter in URL")
 			return
 		}
@@ -50,7 +51,7 @@ func TaskUpdateHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) 
 		err = validators.ValidateTaskForUpdate(t)
 
 		if err != nil {
-			log.Debug().Err(err)
+			log.Error().Int("UserID", int(userID)).Err(err).Msg(err.Error())
 			response.SendJSONError(w, http.StatusBadRequest, err.Error())
 			return
 		}
@@ -58,12 +59,12 @@ func TaskUpdateHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) 
 		task, err := models.UpdateTask(db, userID, int64(id), t)
 
 		if err != nil {
-			log.Debug().Err(err)
+			log.Error().Int("UserID", int(userID)).Err(err).Msg(err.Error())
 			response.SendJSONError(w, http.StatusBadRequest, "Can not update task")
 			return
 		}
 
-		log.Debug().Msgf("Task %d updated", id)
+		log.Info().Int("UserID", int(userID)).Msgf("Task %d updated", task.ID)
 
 		response.SendJSON(w, http.StatusOK, task)
 	}

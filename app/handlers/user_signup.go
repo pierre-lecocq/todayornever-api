@@ -1,6 +1,6 @@
 // File: user_signup.go
 // Creation: Thu Sep  5 15:33:36 2024
-// Time-stamp: <2024-09-16 19:00:31>
+// Time-stamp: <2024-09-20 11:26:31>
 // Copyright (C): 2024 Pierre Lecocq
 
 package handlers
@@ -24,7 +24,7 @@ func UserSignupHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) 
 		err := json.NewDecoder(r.Body).Decode(&u)
 
 		if err != nil {
-			log.Debug().Err(err)
+			log.Error().Err(err).Msg(err.Error())
 			response.SendJSONError(w, http.StatusBadRequest, "Can not decode JSON body")
 			return
 		}
@@ -32,7 +32,7 @@ func UserSignupHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) 
 		err = validators.ValidateUserForCreation(u)
 
 		if err != nil {
-			log.Debug().Err(err)
+			log.Error().Err(err).Msg(err.Error())
 			response.SendJSONError(w, http.StatusBadRequest, err.Error())
 			return
 		}
@@ -40,12 +40,12 @@ func UserSignupHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) 
 		user, err := models.CreateUser(db, u)
 
 		if err != nil {
-			log.Debug().Err(err)
+			log.Error().Err(err).Msg(err.Error())
 			response.SendJSONError(w, http.StatusBadRequest, "Can not create user")
 			return
 		}
 
-		log.Debug().Msgf("User %d created", user.ID)
+		log.Info().Msgf("User %d created", user.ID)
 
 		response.SendJSON(w, http.StatusCreated, user)
 	}

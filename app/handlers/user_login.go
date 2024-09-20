@@ -1,6 +1,6 @@
 // File: user_login.go
 // Creation: Thu Sep  5 15:33:47 2024
-// Time-stamp: <2024-09-17 18:18:38>
+// Time-stamp: <2024-09-20 11:26:18>
 // Copyright (C): 2024 Pierre Lecocq
 
 package handlers
@@ -27,7 +27,7 @@ func UserLoginHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
 		err := json.NewDecoder(r.Body).Decode(&u)
 
 		if err != nil {
-			log.Debug().Err(err)
+			log.Error().Err(err).Msg(err.Error())
 			response.SendJSONError(w, http.StatusBadRequest, "Can not decode JSON body")
 			return
 		}
@@ -35,7 +35,7 @@ func UserLoginHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
 		err = validators.ValidateUserForLogin(u)
 
 		if err != nil {
-			log.Debug().Err(err)
+			log.Error().Err(err).Msg(err.Error())
 			response.SendJSONError(w, http.StatusBadRequest, err.Error())
 			return
 		}
@@ -43,7 +43,7 @@ func UserLoginHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
 		user, err := models.LoginUser(db, u.Email, u.Password)
 
 		if err != nil {
-			log.Debug().Err(err)
+			log.Error().Err(err).Msg(err.Error())
 			response.SendJSONError(w, http.StatusNotFound, "User Not Found")
 			return
 		}
@@ -56,12 +56,12 @@ func UserLoginHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
 		)
 
 		if err != nil {
-			log.Debug().Err(err)
+			log.Error().Err(err).Msg(err.Error())
 			response.SendJSONError(w, http.StatusBadRequest, "Can not generate token")
 			return
 		}
 
-		log.Debug().Msgf("User %d logged in", user.ID)
+		log.Info().Msgf("User %d logged in", user.ID)
 
 		response.SendJSON(w, http.StatusOK, models.UserToken{
 			Message: fmt.Sprintf("Welcome %s! Please use the provided token in your next queries to access your resources.", user.Username),

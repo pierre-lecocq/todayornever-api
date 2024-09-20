@@ -1,8 +1,8 @@
 BIN_NAME=todayornever-api
 
-.PHONY: build
+.PHONY: build test coverage run start clean
 
-all: build test coverage run start clean
+all: build
 
 test:
 	go test ./...

@@ -30,7 +30,8 @@ ln -s /snap/bin/certbot /usr/bin/certbot
 1. Create the `.env` file
 2. Create the database file and run the migrations
 3. Compile the binary with `env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./prod/todayornever-api .`
-4. Put these 3 files into /home/todayornever/todayornever-api
+4. Put these 3 files into /home/todayornever/todayornever-api (`rsync -avz <src> <user@host>/home/todayornever/todayornever-api/`)
+
 
 ## Set a systemd service
 

@@ -1,6 +1,6 @@
 // File: task_fetch.go
 // Creation: Thu Sep  5 15:33:16 2024
-// Time-stamp: <2024-09-16 18:59:37>
+// Time-stamp: <2024-09-20 11:25:27>
 // Copyright (C): 2024 Pierre Lecocq
 
 package handlers
@@ -22,6 +22,7 @@ func TaskFetchHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
 		userID := r.Context().Value("UserID").(int64)
 
 		if userID == 0 {
+			log.Error().Msg("Invalid UserID value in context")
 			response.SendJSONError(w, http.StatusBadRequest, "Invalid UserID value in context")
 			return
 		}
@@ -30,7 +31,7 @@ func TaskFetchHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
 		id, err := strconv.Atoi(params["id"])
 
 		if err != nil {
-			log.Debug().Err(err)
+			log.Error().Int("UserID", int(userID)).Err(err).Msg(err.Error())
 			response.SendJSONError(w, http.StatusBadRequest, "Invalid ID parameter in URL")
 			return
 		}
@@ -38,12 +39,12 @@ func TaskFetchHandler(db *sql.DB) func(w http.ResponseWriter, r *http.Request) {
 		task, err := models.FetchTask(db, userID, int64(id))
 
 		if err != nil {
-			log.Debug().Err(err)
+			log.Error().Int("UserID", int(userID)).Err(err).Msg(err.Error())
 			response.SendJSONError(w, http.StatusNotFound, err.Error())
 			return
 		}
 
-		log.Debug().Msgf("Task %d fetched", id)
+		log.Info().Int("UserID", int(userID)).Msgf("Task %d fetched", task.ID)
 
 		response.SendJSON(w, http.StatusOK, task)
 	}
