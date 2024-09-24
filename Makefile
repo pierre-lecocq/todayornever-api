@@ -21,7 +21,7 @@ start:
 	./$(BIN_NAME) # env $(cat .env | xargs) ./$(BIN_NAME)
 
 clean:
-	rm -f ./$(BIN_NAME) ./$(BIN_NAME)-linux-amd64 coverage.out
+	rm -f ./$(BIN_NAME) coverage.out
 
 # Database migrations
 
@@ -41,8 +41,8 @@ docker-build:
 
 docker-run:
 	docker run \
-		-p 8080:8080 \
-		--env-file ./.env \
+		--port 8080:8080 \
+		--mount type=bind,source="$(pwd)/data",target=/app
 		$(BIN_NAME):latest
 
 docker-clean:

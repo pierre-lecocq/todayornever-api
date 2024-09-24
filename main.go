@@ -1,6 +1,6 @@
 // File: main.go
 // Creation: Thu Sep  5 08:17:00 2024
-// Time-stamp: <2024-09-20 11:59:35>
+// Time-stamp: <2024-09-24 11:27:04>
 // Copyright (C): 2024 Pierre Lecocq
 
 package main
@@ -19,6 +19,7 @@ import (
 	"github.com/pierre-lecocq/todayornever-api/pkg/logging"
 
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
@@ -128,7 +129,13 @@ func main() {
 		WriteTimeout: time.Second * 15,
 		ReadTimeout:  time.Second * 15,
 		IdleTimeout:  time.Second * 60,
-		Handler:      r,
+		Handler: cors.New(cors.Options{
+			AllowedOrigins: []string{"*"},
+			AllowedMethods: []string{"GET", "POST", "PATCH", "DELETE"},
+			// AllowedHeaders:   []string{"Content-Type"},
+			AllowCredentials: true,
+			// Debug:            cfg.Cors.Debug,
+		}).Handler(r),
 	}
 
 	log.Debug().Msgf("Starting service on port %d...", viper.GetInt("SERVICE_PORT"))

@@ -8,7 +8,7 @@ cp ~/.ssh/authorized_keys /home/todayornever/.ssh/authorized_keys
 useradd -d /home/todayornever todayornever
 usermod -aG sudo todayornever
 chown -R todayornever:todayornever /home/todayornever/
-chown root:root /home/todayornever
+chown todayornever:todayornever /home/todayornever
 chmod 700 /home/todayornever/.ssh
 chmod 644 /home/todayornever/.ssh/authorized_keys
 passwd todayornever
@@ -17,7 +17,7 @@ passwd todayornever
 ## Install needed software
 
 ```sh
-apt-get install nginx ssl-cert golang-go
+apt-get install mg nginx ssl-cert golang-go
 
 snap install core
 snap refresh core
