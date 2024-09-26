@@ -1,5 +1,9 @@
 # Today or never
 
+<p align="right">
+[![Build](https://github.com/pierre-lecocq/todayornever-api/actions/workflows/build.yml/badge.svg)](https://github.com/pierre-lecocq/todayornever-api/actions/workflows/build.yml) [![Tests](https://github.com/pierre-lecocq/todayornever-api/actions/workflows/tests.yml/badge.svg)](https://github.com/pierre-lecocq/todayornever-api/actions/workflows/tests.yml)
+</p>
+
 This program is a service to manage your tasks, with a focus on what you can do today.
 
 It is a REST API implementing the following features:
@@ -9,8 +13,6 @@ It is a REST API implementing the following features:
 - CORS protection
 - Rate limiting
 - Request logging
-
-[![Build](https://github.com/pierre-lecocq/todayornever-api/actions/workflows/build.yml/badge.svg)](https://github.com/pierre-lecocq/todayornever-api/actions/workflows/build.yml) [![Tests](https://github.com/pierre-lecocq/todayornever-api/actions/workflows/tests.yml/badge.svg)](https://github.com/pierre-lecocq/todayornever-api/actions/workflows/tests.yml)
 
 ## Documentation
 
