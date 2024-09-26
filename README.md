@@ -1,8 +1,6 @@
 # Today or never
 
-[![Tests](https://github.com/pierre-lecocq/todayornever-api/actions/workflows/tests.yml/badge.svg)](https://github.com/pierre-lecocq/todayornever-api/actions/workflows/tests.yml) - [![Build](https://github.com/pierre-lecocq/todayornever-api/actions/workflows/build.yml/badge.svg)](https://github.com/pierre-lecocq/todayornever-api/actions/workflows/build.yml)
-
-## What is it?
+[![Tests](https://github.com/pierre-lecocq/todayornever-api/actions/workflows/tests.yml/badge.svg)](https://github.com/pierre-lecocq/todayornever-api/actions/workflows/tests.yml) | [![Build](https://github.com/pierre-lecocq/todayornever-api/actions/workflows/build.yml/badge.svg)](https://github.com/pierre-lecocq/todayornever-api/actions/workflows/build.yml)
 
 This program is a service to manage your tasks, with a focus on what you can do today.
 
