@@ -1,6 +1,6 @@
-// File: task_update_test.go
-// Creation: Mon Sep  9 09:32:28 2024
-// Time-stamp: <2024-09-26 14:41:02>
+// File: project_update_test.go
+// Creation: Thu Sep 26 14:44:03 2024
+// Time-stamp: <2024-09-26 14:44:50>
 // Copyright (C): 2024 Pierre Lecocq
 
 package validators
@@ -13,17 +13,17 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestValidateTaskForUpdate(t *testing.T) {
+func TestValidateProjectForUpdate(t *testing.T) {
 	type DataProvider struct {
 		testName string
-		task     models.Task
+		project  models.Project
 		err      error
 	}
 
 	dp := []DataProvider{
 		{
 			testName: "OK",
-			task:     models.Task{Title: "My task"},
+			project:  models.Project{Name: "My project"},
 			err:      nil,
 		},
 	}
@@ -31,7 +31,7 @@ func TestValidateTaskForUpdate(t *testing.T) {
 	for _, d := range dp {
 		t.Log(d.testName)
 
-		res := ValidateTaskForUpdate(d.task)
+		res := ValidateProjectForUpdate(d.project)
 
 		if d.err != nil {
 			assert.Error(t, d.err, res)

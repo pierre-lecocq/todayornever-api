@@ -1,6 +1,6 @@
-// File: index_test.go
-// Creation: Mon Sep  9 09:30:22 2024
-// Time-stamp: <2024-09-26 14:54:27>
+// File: health_test.go
+// Creation: Thu Sep 26 14:54:38 2024
+// Time-stamp: <2024-09-26 14:55:03>
 // Copyright (C): 2024 Pierre Lecocq
 
 package handlers
@@ -10,13 +10,13 @@ import (
 	"testing"
 )
 
-func TestIndexHandler(t *testing.T) {
+func TestHealthHandler(t *testing.T) {
 	data := []DataProvider{
 		{
 			TestName:     "Success",
-			Handler:      http.HandlerFunc(IndexHandler()),
+			Handler:      http.HandlerFunc(HealthHandler()),
 			Method:       "GET",
-			Path:         "/",
+			Path:         "/health",
 			ExpectedCode: http.StatusOK,
 			UserID:       1,
 		},

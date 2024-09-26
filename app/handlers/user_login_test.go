@@ -1,6 +1,6 @@
 // File: user_login_test.go
 // Creation: Mon Sep  9 09:30:51 2024
-// Time-stamp: <2024-09-16 19:00:26>
+// Time-stamp: <2024-09-26 14:49:48>
 // Copyright (C): 2024 Pierre Lecocq
 
 package handlers
@@ -18,7 +18,7 @@ func TestUserLoginHandler(t *testing.T) {
 
 	data := []DataProvider{
 		{
-			Name:         "Success",
+			TestName:     "Success",
 			Handler:      http.HandlerFunc(UserLoginHandler(db)),
 			Method:       "POST",
 			Path:         "/login",
@@ -27,7 +27,7 @@ func TestUserLoginHandler(t *testing.T) {
 			UserID:       1,
 		},
 		{
-			Name:         "User Not Found - Username",
+			TestName:     "User Not Found - Username",
 			Handler:      http.HandlerFunc(UserLoginHandler(db)),
 			Method:       "POST",
 			Path:         "/login",
@@ -36,7 +36,7 @@ func TestUserLoginHandler(t *testing.T) {
 			UserID:       1,
 		},
 		{
-			Name:         "User Not Found - Password",
+			TestName:     "User Not Found - Password",
 			Handler:      http.HandlerFunc(UserLoginHandler(db)),
 			Method:       "POST",
 			Path:         "/login",

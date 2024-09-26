@@ -1,6 +1,6 @@
 // File: handler_test.go
 // Creation: Tue Sep 10 08:42:53 2024
-// Time-stamp: <2024-09-16 18:59:13>
+// Time-stamp: <2024-09-26 14:48:48>
 // Copyright (C): 2024 Pierre Lecocq
 
 package handlers
@@ -25,7 +25,7 @@ import (
 )
 
 type DataProvider struct {
-	Name         string
+	TestName     string
 	Handler      http.HandlerFunc
 	Method       string
 	Path         string
@@ -62,15 +62,19 @@ func InitTestDatabase() (*sql.DB, error) {
 	db.Exec(`INSERT INTO user (username, email, password_hash, salt, state) VALUES (?, ?, ?, ?, ?)`,
 		"user2", "user2@mail.com", passwordHash, salt, "active")
 
-	db.Exec(`INSERT INTO task (user_id, title, state, position) VALUES (?, ?, ?, ?)`, 1, "First task", "todo", 1)
-	db.Exec(`INSERT INTO task (user_id, title, state, position) VALUES (?, ?, ?, ?)`, 2, "Second task", "todo", 1)
-	db.Exec(`INSERT INTO task (user_id, title, state, position) VALUES (?, ?, ?, ?)`, 1, "Third task", "todo", 2)
+	db.Exec(`INSERT INTO project (user_id, name, position) VALUES (?, ?, ?)`, 1, "First project", 1)
+	db.Exec(`INSERT INTO project (user_id, name, position) VALUES (?, ?, ?)`, 2, "Second project", 1)
+	db.Exec(`INSERT INTO project (user_id, name, position) VALUES (?, ?, ?)`, 1, "Third project", 2)
+
+	db.Exec(`INSERT INTO task (user_id, project_id, title, state, position) VALUES (?, ?, ?, ?, ?)`, 1, 1, "First task", "todo", 1)
+	db.Exec(`INSERT INTO task (user_id, project_id, title, state, position) VALUES (?, ?, ?, ?, ?)`, 2, 2, "Second task", "todo", 1)
+	db.Exec(`INSERT INTO task (user_id, project_id, title, state, position) VALUES (?, ?, ?, ?, ?)`, 1, 1, "Third task", "todo", 2)
 
 	return db, err
 }
 
 func RequestTest(t *testing.T, dp DataProvider) {
-	t.Logf("%s\n", dp.Name)
+	t.Logf("%s\n", dp.TestName)
 
 	var req *http.Request
 	var err error

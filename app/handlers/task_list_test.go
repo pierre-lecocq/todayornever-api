@@ -1,6 +1,6 @@
 // File: task_list_test.go
 // Creation: Mon Sep  9 09:30:43 2024
-// Time-stamp: <2024-09-15 00:07:44>
+// Time-stamp: <2024-09-26 14:49:36>
 // Copyright (C): 2024 Pierre Lecocq
 
 package handlers
@@ -16,7 +16,7 @@ func TestTaskListHandler(t *testing.T) {
 
 	data := []DataProvider{
 		{
-			Name:         "Success",
+			TestName:     "Success",
 			Handler:      http.HandlerFunc(TaskListHandler(db)),
 			Method:       "GET",
 			Path:         "/tasks",
@@ -24,7 +24,7 @@ func TestTaskListHandler(t *testing.T) {
 			UserID:       1,
 		},
 		{
-			Name:         "Invalid UserID value in context",
+			TestName:     "Invalid UserID value in context",
 			Handler:      http.HandlerFunc(TaskListHandler(db)),
 			Method:       "GET",
 			Path:         "/tasks",
@@ -32,7 +32,7 @@ func TestTaskListHandler(t *testing.T) {
 			UserID:       0,
 		},
 		{
-			Name:         "Invalid page query parameter",
+			TestName:     "Invalid page query parameter",
 			Handler:      http.HandlerFunc(TaskListHandler(db)),
 			Method:       "GET",
 			Path:         "/tasks?page=abc",

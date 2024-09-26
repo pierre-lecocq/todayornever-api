@@ -1,6 +1,6 @@
 // File: user_signup_test.go
 // Creation: Mon Sep  9 09:32:35 2024
-// Time-stamp: <2024-09-16 19:01:59>
+// Time-stamp: <2024-09-26 14:41:54>
 // Copyright (C): 2024 Pierre Lecocq
 
 package validators
@@ -16,36 +16,36 @@ import (
 
 func TestValidateUserForCreation(t *testing.T) {
 	type DataProvider struct {
-		name string
-		user models.User
-		err  error
+		testName string
+		user     models.User
+		err      error
 	}
 
 	dp := []DataProvider{
 		{
-			name: "OK",
-			user: models.User{Username: "example", Password: "Password", Email: "example@mail.com"},
-			err:  nil,
+			testName: "OK",
+			user:     models.User{Username: "example", Password: "Password", Email: "example@mail.com"},
+			err:      nil,
 		},
 		{
-			name: "KO - Invalid username",
-			user: models.User{Username: "me", Password: "Password", Email: "example@mail.com"},
-			err:  fmt.Errorf("Invalid username. It must be a valid string with 3 characters minimum"),
+			testName: "KO - Invalid username",
+			user:     models.User{Username: "me", Password: "Password", Email: "example@mail.com"},
+			err:      fmt.Errorf("Invalid username. It must be a valid string with 3 characters minimum"),
 		},
 		{
-			name: "KO - Invalid password",
-			user: models.User{Username: "example", Password: "pa", Email: "example@mail.com"},
-			err:  fmt.Errorf("Invalid password. It must be a valid string with 8 characters minimum"),
+			testName: "KO - Invalid password",
+			user:     models.User{Username: "example", Password: "pa", Email: "example@mail.com"},
+			err:      fmt.Errorf("Invalid password. It must be a valid string with 8 characters minimum"),
 		},
 		{
-			name: "KO - Invalid email",
-			user: models.User{Username: "example", Password: "Password", Email: "example"},
-			err:  fmt.Errorf("Invalid email"),
+			testName: "KO - Invalid email",
+			user:     models.User{Username: "example", Password: "Password", Email: "example"},
+			err:      fmt.Errorf("Invalid email"),
 		},
 	}
 
 	for _, d := range dp {
-		t.Log(d.name)
+		t.Log(d.testName)
 
 		res := ValidateUserForCreation(d.user)
 

@@ -1,6 +1,6 @@
-// File: task_update_test.go
-// Creation: Mon Sep  9 09:30:47 2024
-// Time-stamp: <2024-09-26 14:49:42>
+// File: project_update_test.go
+// Creation: Thu Sep 26 14:53:01 2024
+// Time-stamp: <2024-09-26 14:53:39>
 // Copyright (C): 2024 Pierre Lecocq
 
 package handlers
@@ -12,38 +12,38 @@ import (
 	"github.com/pierre-lecocq/todayornever-api/app/models"
 )
 
-func TestTaskUpdateHandler(t *testing.T) {
+func TestProjectUpdateHandler(t *testing.T) {
 	db, _ := InitTestDatabase()
 	defer db.Close()
 
 	data := []DataProvider{
 		{
 			TestName:     "Success",
-			Handler:      http.HandlerFunc(TaskUpdateHandler(db)),
+			Handler:      http.HandlerFunc(ProjectUpdateHandler(db)),
 			Method:       "PATCH",
-			Path:         "/tasks/1",
+			Path:         "/projects/1",
 			URLVars:      map[string]string{"id": "1"},
-			Body:         models.Task{Title: "Edited"},
+			Body:         models.Project{Name: "Edited"},
 			ExpectedCode: http.StatusOK,
 			UserID:       1,
 		},
 		{
 			TestName:     "Invalid UserID value in context",
-			Handler:      http.HandlerFunc(TaskUpdateHandler(db)),
+			Handler:      http.HandlerFunc(ProjectUpdateHandler(db)),
 			Method:       "PATCH",
-			Path:         "/tasks/1",
+			Path:         "/projects/1",
 			URLVars:      map[string]string{"id": "1"},
-			Body:         models.Task{Title: "Edited"},
+			Body:         models.Project{Name: "Edited"},
 			ExpectedCode: http.StatusBadRequest,
 			UserID:       0,
 		},
 		{
 			TestName:     "Invalid ID parameter in URL",
-			Handler:      http.HandlerFunc(TaskUpdateHandler(db)),
+			Handler:      http.HandlerFunc(ProjectUpdateHandler(db)),
 			Method:       "PATCH",
-			Path:         "/tasks/abc",
+			Path:         "/projects/abc",
 			URLVars:      map[string]string{"id": "abc"},
-			Body:         models.Task{Title: "Edited"},
+			Body:         models.Project{Name: "Edited"},
 			ExpectedCode: http.StatusBadRequest,
 			UserID:       1,
 		},

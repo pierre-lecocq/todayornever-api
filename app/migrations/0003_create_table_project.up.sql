@@ -1,11 +1,8 @@
-CREATE TABLE IF NOT EXISTS task (
+CREATE TABLE IF NOT EXISTS project (
     id INTEGER,
     user_id INTEGER NOT NULL,
-    project_id INTEGER,
-    parent_task_id INTEGER,
-    title TEXT NOT NULL,
-    state TEXT,
-    due_at TIMESTAMP DEFAULT (datetime('now', '+1 day', 'start of day')),
+    name TEXT NOT NULL,
+    description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     position INTEGER,

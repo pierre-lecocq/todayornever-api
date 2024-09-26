@@ -1,6 +1,6 @@
 // File: user_signup_test.go
 // Creation: Mon Sep  9 09:30:58 2024
-// Time-stamp: <2024-09-16 19:00:36>
+// Time-stamp: <2024-09-26 14:49:53>
 // Copyright (C): 2024 Pierre Lecocq
 
 package handlers
@@ -18,7 +18,7 @@ func TestUserSignupHandler(t *testing.T) {
 
 	data := []DataProvider{
 		{
-			Name:         "Success",
+			TestName:     "Success",
 			Handler:      http.HandlerFunc(UserSignupHandler(db)),
 			Method:       "POST",
 			Path:         "/signup",
@@ -27,7 +27,7 @@ func TestUserSignupHandler(t *testing.T) {
 			UserID:       1,
 		},
 		{
-			Name:         "Duplicate",
+			TestName:     "Duplicate",
 			Handler:      http.HandlerFunc(UserSignupHandler(db)),
 			Method:       "POST",
 			Path:         "/signup",
@@ -36,7 +36,7 @@ func TestUserSignupHandler(t *testing.T) {
 			UserID:       1,
 		},
 		{
-			Name:         "Invalid email",
+			TestName:     "Invalid email",
 			Handler:      http.HandlerFunc(UserSignupHandler(db)),
 			Method:       "POST",
 			Path:         "/signup",
@@ -45,7 +45,7 @@ func TestUserSignupHandler(t *testing.T) {
 			UserID:       1,
 		},
 		{
-			Name:         "Invalid username",
+			TestName:     "Invalid username",
 			Handler:      http.HandlerFunc(UserSignupHandler(db)),
 			Method:       "POST",
 			Path:         "/signup",
@@ -54,7 +54,7 @@ func TestUserSignupHandler(t *testing.T) {
 			UserID:       1,
 		},
 		{
-			Name:         "Invalid password",
+			TestName:     "Invalid password",
 			Handler:      http.HandlerFunc(UserSignupHandler(db)),
 			Method:       "POST",
 			Path:         "/signup",

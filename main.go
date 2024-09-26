@@ -1,6 +1,6 @@
 // File: main.go
 // Creation: Thu Sep  5 08:17:00 2024
-// Time-stamp: <2024-09-24 11:27:04>
+// Time-stamp: <2024-09-26 14:47:11>
 // Copyright (C): 2024 Pierre Lecocq
 
 package main
@@ -115,6 +115,12 @@ func main() {
 
 	r.Handle("/login", http.HandlerFunc(hd.UserLoginHandler(db))).Methods(http.MethodPost)
 	r.Handle("/signup", http.HandlerFunc(hd.UserSignupHandler(db))).Methods(http.MethodPost)
+
+	r.Handle("/projects", mw.Auth(http.HandlerFunc(hd.ProjectListHandler(db)))).Methods(http.MethodGet)
+	r.Handle("/projects", mw.Auth(http.HandlerFunc(hd.ProjectCreateHandler(db)))).Methods(http.MethodPost)
+	r.Handle("/projects/{id}", mw.Auth(http.HandlerFunc(hd.ProjectFetchHandler(db)))).Methods(http.MethodGet)
+	r.Handle("/projects/{id}", mw.Auth(http.HandlerFunc(hd.ProjectUpdateHandler(db)))).Methods(http.MethodPatch, http.MethodPut)
+	r.Handle("/projects/{id}", mw.Auth(http.HandlerFunc(hd.ProjectDeleteHandler(db)))).Methods(http.MethodDelete)
 
 	r.Handle("/tasks", mw.Auth(http.HandlerFunc(hd.TaskListHandler(db)))).Methods(http.MethodGet)
 	r.Handle("/tasks", mw.Auth(http.HandlerFunc(hd.TaskCreateHandler(db)))).Methods(http.MethodPost)

@@ -1,6 +1,6 @@
 // File: user_login_test.go
 // Creation: Mon Sep  9 09:32:32 2024
-// Time-stamp: <2024-09-16 19:01:48>
+// Time-stamp: <2024-09-26 14:41:26>
 // Copyright (C): 2024 Pierre Lecocq
 
 package validators
@@ -16,31 +16,31 @@ import (
 
 func TestValidateUserForLogin(t *testing.T) {
 	type DataProvider struct {
-		name string
-		user models.User
-		err  error
+		testName string
+		user     models.User
+		err      error
 	}
 
 	dp := []DataProvider{
 		{
-			name: "OK",
-			user: models.User{Password: "Password", Email: "example@mail.com"},
-			err:  nil,
+			testName: "OK",
+			user:     models.User{Password: "Password", Email: "example@mail.com"},
+			err:      nil,
 		},
 		{
-			name: "KO - Invalid password",
-			user: models.User{Password: "pa", Email: "example@mail.com"},
-			err:  fmt.Errorf("Invalid password"),
+			testName: "KO - Invalid password",
+			user:     models.User{Password: "pa", Email: "example@mail.com"},
+			err:      fmt.Errorf("Invalid password"),
 		},
 		{
-			name: "KO - Invalid email",
-			user: models.User{Password: "Password", Email: "example"},
-			err:  fmt.Errorf("Invalid email"),
+			testName: "KO - Invalid email",
+			user:     models.User{Password: "Password", Email: "example"},
+			err:      fmt.Errorf("Invalid email"),
 		},
 	}
 
 	for _, d := range dp {
-		t.Log(d.name)
+		t.Log(d.testName)
 
 		res := ValidateUserForLogin(d.user)
 

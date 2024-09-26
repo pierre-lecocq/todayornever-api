@@ -1,6 +1,6 @@
 // File: model_test.go
 // Creation: Mon Sep  9 11:11:45 2024
-// Time-stamp: <2024-09-16 19:01:03>
+// Time-stamp: <2024-09-26 14:31:47>
 // Copyright (C): 2024 Pierre Lecocq
 
 package models
@@ -40,9 +40,13 @@ func InitTestDatabase() (*sql.DB, error) {
 	db.Exec(`INSERT INTO user (username, email, password_hash, salt, state) VALUES (?, ?, ?, ?, ?)`,
 		"user2", "user2@mail.com", passwordHash, salt, "active")
 
-	db.Exec(`INSERT INTO task (user_id, title, state, position) VALUES (?, ?, ?, ?)`, 1, "First task", "todo", 1)
-	db.Exec(`INSERT INTO task (user_id, title, state, position) VALUES (?, ?, ?, ?)`, 2, "Second task", "todo", 1)
-	db.Exec(`INSERT INTO task (user_id, title, state, position) VALUES (?, ?, ?, ?)`, 1, "Third task", "todo", 2)
+	db.Exec(`INSERT INTO project (user_id, name, position) VALUES (?, ?, ?)`, 1, "First project", 1)
+	db.Exec(`INSERT INTO project (user_id, name, position) VALUES (?, ?, ?)`, 2, "Second project", 1)
+	db.Exec(`INSERT INTO project (user_id, name, position) VALUES (?, ?, ?)`, 1, "Third project", 2)
+
+	db.Exec(`INSERT INTO task (user_id, project_id, title, state, position) VALUES (?, ?, ?, ?, ?)`, 1, 1, "First task", "todo", 1)
+	db.Exec(`INSERT INTO task (user_id, project_id, title, state, position) VALUES (?, ?, ?, ?, ?)`, 2, 2, "Second task", "todo", 1)
+	db.Exec(`INSERT INTO task (user_id, project_id, title, state, position) VALUES (?, ?, ?, ?, ?)`, 1, 1, "Third task", "todo", 2)
 
 	return db, err
 }
