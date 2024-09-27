@@ -1,6 +1,6 @@
 // File: main.go
 // Creation: Thu Sep  5 08:17:00 2024
-// Time-stamp: <2024-09-26 14:47:11>
+// Time-stamp: <2024-09-27 18:19:56>
 // Copyright (C): 2024 Pierre Lecocq
 
 package main
@@ -56,6 +56,9 @@ func initDatabase() (*sql.DB, error) {
 }
 
 func initLogger() {
+	// @TODO hooks are also avaialble to send extra data elsewhere
+	// https://last9.io/blog/golang-logging-guide-for-developers/?ref=dailydev#integrating-with-observability-platforms
+
 	writers := []io.Writer{
 		zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.RFC3339},
 	}
@@ -145,5 +148,6 @@ func main() {
 	}
 
 	log.Debug().Msgf("Starting service on port %d...", viper.GetInt("SERVICE_PORT"))
+	log.Debug().Msg("Logs and monitoring avaialble at https://cloud.openobserve.ai/")
 	log.Panic().Err(srv.ListenAndServe())
 }
